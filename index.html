@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
+<!-- 📱 Mobile viewport (ADDED) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Made by Mahek Dathiya❤️</title>
 
 <style>
@@ -34,6 +38,31 @@ canvas{display:none;margin:auto;}
 }
 h1{color:pink;}
 .footer{font-size:14px;color:#ccc;margin-top:20px;}
+
+/* 📱 MOBILE SUPPORT (ADDED ONLY) */
+@media (max-width:600px){
+  button{
+    width:90%;
+    max-width:320px;
+    font-size:16px;
+  }
+  canvas{
+    max-width:100%;
+    height:auto;
+  }
+  #gallery img{
+    width:90%;
+    max-width:300px;
+    height:auto;
+  }
+  p{
+    padding:0 15px;
+    line-height:1.6;
+  }
+  h1,h2{
+    padding:0 10px;
+  }
+}
 </style>
 </head>
 
@@ -64,11 +93,10 @@ h1{color:pink;}
   <p>
     My Love ❤️<br><br>
     No matter the distance, my heart is always with you.<br>
-    Another year, another chance to make amazing memories with you. <br>
+    Another year, another chance to make amazing memories with you.<br>
     I hope this year fills your life with happiness, love, and all the little joys that make you smile.<br><br>
-     Can’t wait to hold your hand through every adventure this year brings and create even more beautiful memories together. ❤️💫<br><br>
+    Can’t wait to hold your hand through every adventure this year brings and create even more beautiful memories together. ❤️💫<br><br>
     Cheers to us and to a year full of love and laughter! 🥂<br><br>
-
     I love you endlessly ❤️
   </p>
   <div class="footer">— Made by Mahek Dathiya</div>
@@ -78,6 +106,17 @@ h1{color:pink;}
 <canvas id="fireworks"></canvas>
 
 <script>
+/* 📱 MOBILE CANVAS RESIZE (ADDED) */
+function resizeHeartCanvas(){
+  const c=document.getElementById("heartCanvas");
+  if(window.innerWidth<600){
+    c.width=window.innerWidth-40;
+    c.height=window.innerWidth-40;
+  }
+}
+window.addEventListener("load",resizeHeartCanvas);
+window.addEventListener("resize",resizeHeartCanvas);
+
 /* ❤️ HEART GEOMETRY */
 const heartCanvas=document.getElementById("heartCanvas");
 const hctx=heartCanvas.getContext("2d");
@@ -91,7 +130,7 @@ function startHeart(){
     const x=16*Math.pow(Math.sin(t),3);
     const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
     hctx.fillStyle="red";
-    hctx.fillRect(250+x*10,250+y*10,2,2);
+    hctx.fillRect(heartCanvas.width/2+x*10,heartCanvas.height/2+y*10,2,2);
     t+=0.02;
     if(t>=Math.PI*2){
       clearInterval(interval);
@@ -101,7 +140,12 @@ function startHeart(){
 }
 
 /* 🖼️ GALLERY */
-const images=["WhatsApp Image 2025-12-31 at 20.30.58.jpeg","WhatsApp Image 2025-12-31 at 20.30.57 (1).jpeg","WhatsApp Image 2025-12-31 at 20.30.57.jpeg","WhatsApp Image 2025-12-31 at 20.30.57.jpeg"];
+const images=[
+  "WhatsApp Image 2025-12-31 at 20.30.58.jpeg",
+  "WhatsApp Image 2025-12-31 at 20.30.57 (1).jpeg",
+  "WhatsApp Image 2025-12-31 at 20.30.57.jpeg",
+  "WhatsApp Image 2025-12-31 at 20.30.57.jpeg"
+];
 let i=0, galleryInterval;
 
 function showGallery(){
@@ -124,7 +168,7 @@ function showMessage(){
   startFireworks();
 }
 
-/* 🎆 REALISTIC FIREWORK ENGINE */
+/* 🎆 FIREWORKS */
 function startFireworks(){
   const canvas=document.getElementById("fireworks");
   canvas.width=window.innerWidth;
@@ -132,7 +176,7 @@ function startFireworks(){
   canvas.style.display="block";
   const ctx=canvas.getContext("2d");
 
-  let fireworks=[], particles=[];
+  let fireworks=[],particles=[];
 
   class Firework{
     constructor(){
@@ -173,9 +217,7 @@ function startFireworks(){
   }
 
   function explode(x,y,color){
-    for(let i=0;i<80;i++){
-      particles.push(new Particle(x,y,color));
-    }
+    for(let i=0;i<80;i++) particles.push(new Particle(x,y,color));
   }
 
   function draw(x,y,r,color){
@@ -190,15 +232,23 @@ function startFireworks(){
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     if(Math.random()<0.05) fireworks.push(new Firework());
-
     fireworks=fireworks.filter(f=>!f.update());
     particles=particles.filter(p=>!p.update());
-
     requestAnimationFrame(animate);
   }
   animate();
 }
+
+/* 📱 FIREWORK RESIZE FIX (ADDED) */
+window.addEventListener("resize",()=>{
+  const f=document.getElementById("fireworks");
+  if(f){
+    f.width=window.innerWidth;
+    f.height=window.innerHeight;
+  }
+});
 </script>
 
 </body>
-</html> 
+</html>
+
