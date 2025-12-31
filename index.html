@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Made by Mahek Dathiya❤️</title>
+
+<style>
+body{
+  margin:0;
+  background:black;
+  color:white;
+  text-align:center;
+  font-family:Poppins, sans-serif;
+  overflow:hidden;
+}
+button{
+  padding:15px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background:crimson;
+  color:white;
+  cursor:pointer;
+  margin-top:20px;
+}
+canvas{display:none;margin:auto;}
+#readyBtn,#gallery,#message{display:none;}
+#gallery img{
+  width:280px;
+  height:380px;
+  object-fit:cover;
+  border-radius:15px;
+  box-shadow:0 0 20px pink;
+}
+h1{color:pink;}
+.footer{font-size:14px;color:#ccc;margin-top:20px;}
+</style>
+</head>
+
+<body>
+
+<!-- START -->
+<div id="start">
+  <h1>💝 Something Special For You 💝</h1>
+  <button onclick="startHeart()">Click Here For Surprise</button>
+</div>
+
+<!-- HEART -->
+<canvas id="heartCanvas" width="500" height="500"></canvas>
+<button id="readyBtn" onclick="showGallery()">Ready ❤️</button>
+
+<!-- GALLERY -->
+<div id="gallery">
+  <h1>✨ Our 2025 Memories ✨</h1>
+  <img id="galleryImg">
+  <br>
+  <button onclick="showMessage()">Final Message 🎁</button>
+</div>
+
+<!-- MESSAGE -->
+<div id="message">
+  <h2>2026 is Here! 🎉</h2>
+  <h1>🎆 Happy New Year HEMY 🎆</h1>
+  <p>
+    My Love ❤️<br><br>
+    No matter the distance, my heart is always with you.<br>
+    Another year, another chance to make amazing memories with you. <br>
+    I hope this year fills your life with happiness, love, and all the little joys that make you smile.<br><br>
+     Can’t wait to hold your hand through every adventure this year brings and create even more beautiful memories together. ❤️💫<br><br>
+    Cheers to us and to a year full of love and laughter! 🥂<br><br>
+
+    I love you endlessly ❤️
+  </p>
+  <div class="footer">— Made by Mahek Dathiya</div>
+</div>
+
+<!-- FIREWORKS -->
+<canvas id="fireworks"></canvas>
+
+<script>
+/* ❤️ HEART GEOMETRY */
+const heartCanvas=document.getElementById("heartCanvas");
+const hctx=heartCanvas.getContext("2d");
+let t=0;
+
+function startHeart(){
+  document.getElementById("start").style.display="none";
+  heartCanvas.style.display="block";
+
+  const interval=setInterval(()=>{
+    const x=16*Math.pow(Math.sin(t),3);
+    const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+    hctx.fillStyle="red";
+    hctx.fillRect(250+x*10,250+y*10,2,2);
+    t+=0.02;
+    if(t>=Math.PI*2){
+      clearInterval(interval);
+      document.getElementById("readyBtn").style.display="inline-block";
+    }
+  },10);
+}
+
+/* 🖼️ GALLERY */
+const images=["WhatsApp Image 2025-12-31 at 20.30.58.jpeg","WhatsApp Image 2025-12-31 at 20.30.57 (1).jpeg","WhatsApp Image 2025-12-31 at 20.30.57.jpeg","WhatsApp Image 2025-12-31 at 20.30.57.jpeg"];
+let i=0, galleryInterval;
+
+function showGallery(){
+  document.getElementById("readyBtn").style.display="none";
+  heartCanvas.style.display="none";
+  document.getElementById("gallery").style.display="block";
+  document.getElementById("galleryImg").src=images[0];
+
+  galleryInterval=setInterval(()=>{
+    i=(i+1)%images.length;
+    document.getElementById("galleryImg").src=images[i];
+  },2000);
+}
+
+/* 🎁 MESSAGE */
+function showMessage(){
+  clearInterval(galleryInterval);
+  document.getElementById("gallery").style.display="none";
+  document.getElementById("message").style.display="block";
+  startFireworks();
+}
+
+/* 🎆 REALISTIC FIREWORK ENGINE */
+function startFireworks(){
+  const canvas=document.getElementById("fireworks");
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  canvas.style.display="block";
+  const ctx=canvas.getContext("2d");
+
+  let fireworks=[], particles=[];
+
+  class Firework{
+    constructor(){
+      this.x=Math.random()*canvas.width;
+      this.y=canvas.height;
+      this.targetY=Math.random()*canvas.height/2;
+      this.speed=6+Math.random()*3;
+      this.color=`hsl(${Math.random()*360},100%,50%)`;
+    }
+    update(){
+      this.y-=this.speed;
+      draw(this.x,this.y,2,this.color);
+      if(this.y<=this.targetY){
+        explode(this.x,this.y,this.color);
+        return true;
+      }
+      return false;
+    }
+  }
+
+  class Particle{
+    constructor(x,y,color){
+      this.x=x; this.y=y;
+      this.angle=Math.random()*Math.PI*2;
+      this.speed=Math.random()*6+2;
+      this.life=60;
+      this.color=color;
+      this.gravity=0.15;
+    }
+    update(){
+      this.speed*=0.98;
+      this.x+=Math.cos(this.angle)*this.speed;
+      this.y+=Math.sin(this.angle)*this.speed+this.gravity;
+      this.life--;
+      draw(this.x,this.y,2,this.color);
+      return this.life<=0;
+    }
+  }
+
+  function explode(x,y,color){
+    for(let i=0;i<80;i++){
+      particles.push(new Particle(x,y,color));
+    }
+  }
+
+  function draw(x,y,r,color){
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=color;
+    ctx.fill();
+  }
+
+  function animate(){
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    if(Math.random()<0.05) fireworks.push(new Firework());
+
+    fireworks=fireworks.filter(f=>!f.update());
+    particles=particles.filter(p=>!p.update());
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+</script>
+
+</body>
+</html> 
